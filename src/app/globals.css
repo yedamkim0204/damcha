@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --background: #141414;
+  --foreground: #ffffff;
+  --muted: #b8b8b8;
+  --muted-bg: #2a2a2a;
+  --border: #3f3f3f;
+  --accent: #ff0558;
+  --accent-hover: #ff2b73;
+  --card: #222222;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-bg: var(--muted-bg);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-card: var(--card);
+  --font-sans: var(--font-body), var(--font-pretendard), -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
+}
+
+html {
+  overflow-x: hidden;
+  background: var(--background);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), var(--font-pretendard), -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}

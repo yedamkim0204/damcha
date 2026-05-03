@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id          Int      @id @default(autoincrement())
+  tmdbId      Int?     @unique
+  title       String
+  originalTitle String?
+  director    String?
+  releaseYear Int?
+  posterUrl   String?
+  watchedDate DateTime
+  rating      Int
+  oneLine     String?
+  memorable   String?
+  review      String?
+  tags        String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([watchedDate])
+}
+
+model Book {
+  id          Int      @id @default(autoincrement())
+  googleId    String?  @unique
+  title       String
+  author      String?
+  publisher   String?
+  isbn        String?
+  coverUrl    String?
+  finishedDate DateTime
+  rating      Int
+  review      String?
+  tags        String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([finishedDate])
+}
+
+model Exhibition {
+  id          Int      @id @default(autoincrement())
+  title       String
+  venue       String?
+  artist      String?
+  visitDate   DateTime
+  rating      Int
+  review      String?
+  photos      String   @default("")
+  tags        String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([visitDate])
+}
