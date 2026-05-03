@@ -7,13 +7,20 @@ const globalForPrisma = globalThis as unknown as {
 
 function makePrisma(): PrismaClient {
   const url = process.env.DATABASE_URL;
+  const tokenLen = process.env.DATABASE_AUTH_TOKEN?.length ?? 0;
+
+  console.log("[prisma] DATABASE_URL prefix:", url?.slice(0, 30));
+  console.log("[prisma] DATABASE_AUTH_TOKEN length:", tokenLen);
+
   if (url?.startsWith("libsql://")) {
+    console.log("[prisma] Using libsql adapter");
     const adapter = new PrismaLibSQL({
       url,
       authToken: process.env.DATABASE_AUTH_TOKEN,
     });
     return new PrismaClient({ adapter });
   }
+  console.log("[prisma] Using default SQLite engine (NO ADAPTER)");
   return new PrismaClient();
 }
 
