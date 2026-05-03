@@ -71,10 +71,38 @@ public/uploads/               # 전시 사진 저장 위치
 - React Server Components / Server Actions
 - TMDB · Google Books · lucide-react · zod · date-fns
 
-## 배포 시 참고
+## 배포 (Vercel + Turso + Vercel Blob)
 
-지금 구조는 로컬 개발용이라 그대로 Vercel에 올라가지 않아요. 클라우드 배포하려면:
+`src/lib/prisma.ts`와 `src/lib/uploads.ts`가 환경에 따라 자동 분기 — 로컬은 SQLite + 파일시스템, 프로덕션은 Turso + Vercel Blob.
 
-- **DB**: SQLite는 서버리스에서 안 돌아가요. [Turso](https://turso.tech) (libSQL, 무료 티어, SQLite 호환) 또는 Vercel Postgres로 이전 필요. `prisma/schema.prisma`의 provider만 바꾸면 됨.
-- **사진 업로드**: Vercel은 파일시스템 쓰기 불가. [Vercel Blob](https://vercel.com/docs/storage/vercel-blob)으로 옮기고 `src/lib/uploads.ts`만 교체하면 됨.
-- **환경변수**: Vercel 대시보드에서 `TMDB_API_KEY`, `DATABASE_URL` 등록.
+### 1. Turso DB 생성
+
+1. https://turso.tech 가입 → 무료 plan 선택 (카드 X)
+2. **Create Database** → 이름 `damcha`, 리전은 `nrt` (도쿄, 한국에서 가까움)
+3. **Database URL** 복사 (`libsql://...`)
+4. **Generate auth token** → 토큰 복사
+5. **Studio** 진입 → SQL 편집기에 `prisma/turso-setup.sql` 전체 붙여넣고 Run
+
+### 2. Vercel 가입 + 임포트
+
+1. https://vercel.com 에서 GitHub로 가입
+2. **Add New → Project** → `damcha` 저장소 선택 → Import
+
+### 3. 환경변수 설정 (배포 직전 화면)
+
+| Key | Value |
+|---|---|
+| `TMDB_API_KEY` | 본인 TMDB v3 API Key |
+| `DATABASE_URL` | Turso의 libsql:// URL |
+| `DATABASE_AUTH_TOKEN` | Turso 토큰 |
+| `BLOB_READ_WRITE_TOKEN` | (다음 단계에서 자동 생성됨) |
+
+### 4. Vercel Blob 추가
+
+Vercel 프로젝트 페이지 → **Storage** 탭 → **Create Database** → **Blob** → 연결.
+
+이러면 `BLOB_READ_WRITE_TOKEN`이 자동으로 환경변수에 추가됨. 그 후 **Redeploy**.
+
+### 5. 끝
+
+배포 URL이 발급됨 (예: `damcha.vercel.app`). 깃 푸시할 때마다 자동 재배포.
